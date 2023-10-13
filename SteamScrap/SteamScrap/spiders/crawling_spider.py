@@ -4,60 +4,77 @@ from bs4 import BeautifulSoup
 from datetime import datetime
 from scrapy.spiders import CrawlSpider, Rule
 from scrapy.linkextractors import LinkExtractor
-from scrapy.http import Request
+from scrapy.item import Item, Field
 
 """
 
 """
 class TestCrawlingSpider(CrawlSpider):
 	name = "Steamcrawler"
-	allowed_domains = ["steampowered.com/"]
-	start_urls = ["https://store.steampowered.com/"]
-	
+	allowed_domains = ["steampowered.com"]
+	#start_urls = ["https://store.steampowered.com/"]
+	start_urls = ["https://store.steampowered.com/games/"]
 	rules = (
-		Rule(LinkExtractor(allow="app/"), callback="parse_item"),
+		Rule(LinkExtractor(allow=r'app/\d+/.+/$'), callback="parse_item",follow=True),
 	)
 
 	def parse_item(self, response):
 		
-		item = scrapy.Item()
+		item = GameItem()
 		soup = BeautifulSoup(response.body, 'lxml')
 		
 		div_element = soup.find('div', {'id': 'genresAndManufacturer'})
 		
-		
-		print (div_element)
-		print (div_element.find('b', string='Título:'))
-		
-		
+		div_element = soup.find('div', {'id': 'genresAndManufacturer'})
 
-		titulo = div_element.find('b', string='Título:').next_sibling.strip()
+		Title = div_element.find('b', string='Title:').next_sibling.strip()
 		
 		#Lista de generos
 		
-		genero_span = div_element.find('b', string='Género:').find_next('span')
-		genero_links = genero_span.find_all('a')
-		genero = [link.get_text(strip=True) for link in genero_links]
+		genre_span = div_element.find('b', string='Genre:').find_next('span')
+		genre_links = genre_span.find_all('a')
+		genre = [link.get_text(strip=True) for link in genre_links]
 			
 		#Lista de desarrolladores
-			
-		desarrollador_elements = div_element.find_all('b', string='Desarrollador:')
-		desarrolladores = [element.find_next('a').get_text(strip=True) for element in desarrollador_elements]
+		
+		developers_element = div_element.find('b', string='Developer:')
+		
+		developers = []
+
+		if developers_element:
+			developers_div = developers_element.find_parent('div', class_='dev_row')
+			if developers_div:
+				developers_links = developers_div.find_all('a')
+				developers = [link.get_text(strip=True) for link in developers_links]
+		
 		
 		#Lista de editores
 		
-		editor_elements = div_element.find_all('b', string='Editor:')
-		editores = [element.find_next('a').get_text(strip=True) for element in editor_elements]
+		publisher_element = div_element.find('b', string='Publisher:')
+		
+		publishers = []
+
+		if publisher_element:
+			publisher_div = publisher_element.find_parent('div', class_='dev_row')
+			if publisher_div:
+				publisher_links = publisher_div.find_all('a')
+				publishers = [link.get_text(strip=True) for link in publisher_links]	
 		
 		#Lista de franquicias
 
-		franquicia_elements = div_element.find_all('b', string='Franquicia:')
-		franquicias = [element.find_next('a').get_text(strip=True) for element in franquicia_elements]
+		franchise_element = div_element.find('b', string='Franchise:')
+		franchise = []
+
+		if franchise_element:
+			franchise_div = franchise_element.find_parent('div', class_='dev_row')
+			if franchise_div:
+				franchise_links = franchise_div.find_all('a')
+				franchise = [link.get_text(strip=True) for link in franchise_links]
 
 		#Fecha de lanzamiento
 		
-		fecha_lanzamiento_str = div_element.find('b', string='Fecha de lanzamiento:').next_sibling.strip()
-		fecha_lanzamiento = datetime.strptime(fecha_lanzamiento_str, '%d %b %Y')
+		release_date_str = div_element.find('b', string='Release Date:').next_sibling.strip()
+		release_date = datetime.strptime(release_date_str, '%d %b, %Y')
 		
 		
 		#Elementos fuera del div
@@ -68,37 +85,55 @@ class TestCrawlingSpider(CrawlSpider):
 		
 		#Descripcion
 		
-		descripcion = soup.find('div', class_="game_description_snippet").get_text(strip=True)
+		description = soup.find('div', class_="game_description_snippet").get_text(strip=True)
 		
 		#Imagenes
 		
-		imagen_cabecera = soup.find('img', class_='game_header_image_full')['src']
+		header_image = soup.find('img', class_='game_header_image_full')['src']
 		
-		images_list = soup.find('div', id= "highlight_strip_scroll").find_all('img')
+		div_images_list = soup.find('div', id= "highlight_strip_scroll").find_all('img')
 		
-		lista_imagenes = []
+		images_list = []
 		
-		for element in images_list:
-			lista_imagenes.append(element['src'])
+		for element in div_images_list:
+			images_list.append(element['src'])
 			
 				
 		if price_element:
-			precio = float(price_element.get_text(strip=True).replace(",", ".").replace("€", ""))
+			if (price_element.get_text(strip=True) == 'Free to Play'):
+				price = float(0)
+			else:
+				price = float(price_element.get_text(strip=True).replace(",", ".").replace("€", ""))
 		elif discount_element:
-			precio = float(discount_element.get_text(strip=True).replace(",", ".").replace("€", ""))
+			price = float(discount_element.get_text(strip=True).replace(",", ".").replace("€", ""))
 		else:
-			precio = "-1"
+			price = "-1"
 			
 			
-		item['Título']= titulo
-		item['Descripción']= descripcion
-		item['Precio']= precio
-		item['Desarrolladores']= desarrolladores
-		item['Editores']= editores
-		item['Franquicias']= franquicias
-		item['Fecha de lanzamiento']= fecha_lanzamiento
-		item['Imágen_Cabecera']= imagen_cabecera
-		item['Lista_Imagenes']= lista_imagenes
-		item['Url']= response.URL
+		item['Title']= Title
+		item['Descrition']= description
+		item['Price']= price
+		item['Genre'] = genre
+		item['Developers']= developers
+		item['Publishers']= publishers
+		item['Franchise']= franchise
+		item['Release_date']= release_date
+		item['Header_Image']= header_image
+		item['Image_List']= images_list
+		item['Url']= response.url
 		
 		return item
+
+
+class GameItem(Item):
+	Title = Field()
+	Descrition = Field()
+	Price = Field()
+	Genre = Field()
+	Developers = Field()
+	Publishers = Field()
+	Franchise = Field()
+	Release_date = Field()
+	Header_Image = Field()
+	Image_List = Field()
+	Url = Field()
