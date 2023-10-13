@@ -12,12 +12,12 @@ from scrapy.item import Item, Field
 class TestCrawlingSpider(CrawlSpider):
 	name = "Steamcrawler"
 	allowed_domains = ["steampowered.com"]
-	#start_urls = ["https://store.steampowered.com/"]
-	start_urls = ["https://store.steampowered.com/games/"]
+	start_urls = ["https://store.steampowered.com/"]
+	
 	rules = (
-		Rule(LinkExtractor(allow=r'app/\d+/.+/$'), callback="parse_item",follow=True),
+		Rule(LinkExtractor(allow=r'tags/en/[^?/]+/$', deny=r'l=[^&/]+'), follow=True),
+		Rule(LinkExtractor(allow='app/', deny=r'l=[^&/]+'), callback="parse_item",follow=True),
 	)
-
 	def parse_item(self, response):
 		
 		item = GameItem()
@@ -70,6 +70,8 @@ class TestCrawlingSpider(CrawlSpider):
 			if franchise_div:
 				franchise_links = franchise_div.find_all('a')
 				franchise = [link.get_text(strip=True) for link in franchise_links]
+		else :
+			franchise = ["none"]
 
 		#Fecha de lanzamiento
 		
