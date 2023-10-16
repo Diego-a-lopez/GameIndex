@@ -4,15 +4,35 @@
 # https://docs.scrapy.org/en/latest/topics/spider-middleware.html
 
 from scrapy import signals
+#import re
 
 # useful for handling different item types with a single interface
 from itemadapter import is_item, ItemAdapter
 
+from scrapy.downloadermiddlewares.redirect import RedirectMiddleware
+
+"""
+class CircumventAgeCheckMiddleware(RedirectMiddleware):
+	def _redirect(self, redirected, request, spider, reason):
+		# Only overrule the default redirect behavior
+		# in the case of mature content checkpoints.
+		if not re.findall('app/(.*)/agecheck', redirected.url):
+			return super()._redirect(redirected, request, spider, reason)
+		 
+		logger.debug(f"Button-type age check triggered for {request.url}.")
+
+		return Request(url=request.url,
+			cookies={'mature_content': '1'},
+			meta={'dont_cache': True},
+			callback=SteamCrawlingSpider.parse_item)
+"""
 
 class SteamscrapSpiderMiddleware:
     # Not all methods need to be defined. If a method is not defined,
     # scrapy acts as if the spider middleware does not modify the
     # passed objects.
+
+
 
     @classmethod
     def from_crawler(cls, crawler):

@@ -190,6 +190,14 @@ if div_element:
 		item['Url']= response.url
 		"""
 		
+		score = soup.find('div', id= "game_area_metascore").find_next('div').get_text(strip=True)
+		reviews= [review.find_next('span').get_text(strip=True) for review in soup.find_all('div', class_= "summary_section")]
+		reviews= soup.find('div', class_= "summary_section").find_next('span').get_text(strip=True)
+		
+		for review in soup.find_all('div', class_= "summary_section"):
+			print(review.find_next('span').get_text(strip=True))
+			print(review.find_next('span').find_next('span').get_text(strip=True))
+			
 		print(f"Título: {Title}")
 		print(f"Descripción: {description}")
 		print(f"Precio: {price}")
@@ -198,6 +206,8 @@ if div_element:
 		print(f"Editor: {publishers}")
 		print(f"Franquicia: {franchise}")
 		print(f"Fecha de lanzamiento: {release_date}")
+		print(f"reviews:{reviews}")
+		print(f"puntuación:{score}")
 
 	#print(page.url)
 	
