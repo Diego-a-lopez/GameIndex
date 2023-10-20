@@ -1,0 +1,172 @@
+
+* {
+	font-family: Arial, Helvetica, sans-serif;   
+}
+
+body{
+	margin:0;
+	background-color: #FFC2C2;
+}
+
+header{
+	border: solid 1.5px black;
+	background-color: #EB0000;
+	color: white ;
+	margin: 1rem;
+	margin-right: 5%;
+	margin-left: 5%;
+}
+
+header, #buscador, #resultado-busqueda, #filtro-tipos, footer{
+	text-align: center;
+}
+
+section, form {
+	padding: 1rem 1rem;
+	overflow: hidden;
+	border: 0.8px solid black;
+	background-color: rgba(245, 245, 245, 0.76);
+	
+	margin: 1rem;
+	margin-right: 5%;
+	margin-left: 5%; 
+}
+
+#nombrePoke{
+	margin: 0rem;
+	margin-top: -0.5rem;
+}
+
+#nombreID{
+	margin-top:1.5rem;
+}
+
+#idPoke{
+	font-size: 1.8em;
+}
+
+#nombrePoke,#tiposPoke{
+	font-size: 1.5rem;
+}
+
+img#imagenPokemon{
+	margin-top: 0.5rem;
+	width:20em;
+	display: block;
+	margin:auto;
+}
+
+#tiposPoke{
+	display: block;
+	margin:auto;
+}
+
+#alturaypeso{
+	margin:0.4rem;
+}
+
+#habilidadesPoke, #statsPoke, #movesPoke{
+	margin-top:2rem;
+}
+
+ul, form.opciones{
+	border: 1px solid #878787;
+	border-radius: 4px;
+	font-size: medium;
+	padding: 0rem;
+	padding-top:0.2rem;
+	margin: 0 auto;
+	margin-top: 0.6rem;
+	list-style: none;
+}
+
+ul{
+	width:60%;
+}
+
+ul#listaMoves, ul#listaFiltro{  
+	overflow-y: scroll;
+	height: 8rem;   
+	border: 2px solid #878787;
+}
+
+form.opciones{
+	padding: 0.5rem;
+	width: 80%;
+}
+
+h2, h3{
+	margin-top:0.5rem;
+	margin-bottom:0.5rem;
+	font-size: 1.1rem;
+}
+
+h2#titulo-filtro{
+	font-size:1.5rem;
+	margin-top:0rem;
+}
+
+input[type=checkbox]{	
+	margin-right: 0.5rem;
+}
+
+#boton_tipo{
+	margin-top: 0.5rem;
+	padding:0.2rem;
+	margin-bottom: 0.5rem;
+}
+
+#error-buscar, #error-filtro{
+	margin: 0.8rem;
+	color: #C02121;
+	font-weight:bold;
+}
+
+li{
+	padding-bottom: 2px;
+}
+
+a {
+    color: rgb(6 107 191);
+}
+
+#linkPoke{
+	text-decoration: none;
+	color: #164979;
+}
+
+footer {
+	margin-top: 1rem;
+	background-color: rgba(245, 245, 245, 0.76);
+	padding: 1rem;
+	color: black;
+	margin-right: 5%;
+	margin-left: 5%;
+}
+
+@media (min-width: 600px){
+
+	section, form, header, footer{
+		margin-right: 10vw;
+		margin-left: 10vw;
+	}
+}
+
+@media (min-width: 700px){
+
+	section, form, header, footer{
+		margin-right: 20vw;
+		margin-left: 20vw;
+	}
+}
+
+@media (min-width: 850px){
+
+	form.opciones{
+		width: 50%;
+	}
+	
+	ul{
+		width: 45%;
+	}
+}

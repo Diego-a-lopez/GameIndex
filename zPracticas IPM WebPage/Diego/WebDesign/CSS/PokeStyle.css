@@ -1,0 +1,96 @@
+.topnav {
+	background-color:  #E94822;
+	overflow: hidden;
+}
+
+.topnav a {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	color: #2C2D34;
+	background-color:  #E94822;
+	text-align: center;
+	padding: 14pvh 16vh;
+	text-decoration: none;
+	font-size: 7vh;
+	font-family: "Archivo Black", serif;
+	border: 2px solid;
+}
+
+body {
+	margin: 0;
+	background-color: #F2910A;
+}
+
+img {
+	width: 20vh;
+	height: 20vh;
+}
+
+button {
+	background-color: #EFD510;
+	color: #2C2D34;
+	width: 24vw;
+	height: 6vh;
+	border: 2px solid;
+}
+
+button:hover{
+	transition: 0.5s;
+	text-decoration: underline;
+	background-color: #2C2D34;
+	color: #EFD510;
+}
+
+.row {
+  display: flex;
+}
+
+#sprite{
+flex: 25%;
+}
+
+#NameType{
+	flex: 75%;
+	display: flex;
+	flex-direction: column;
+	font-size: 3vh;
+	font-family: "Archivo Narrow", serif;
+	color: #2C2D34
+
+}
+
+#bar1{
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	height: 10vh;
+	font-variant: all-caps;
+	font-size: 2.8vh;
+	font-family: "Archivo Narrow", serif;
+	color: #2C2D34;
+}
+
+#text{
+	color: #2C2D34;
+	font-size: 5vh;
+	font-family: "Archivo Narrow", serif;
+}
+
+#textButton{
+	font-size: 2vh;
+	font-family: "Archivo Narrow", serif;
+}
+
+#statBar{
+
+}
+
+#main_frame{
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+}
