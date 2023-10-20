@@ -1,0 +1,9 @@
+
+
+import requests
+
+url = https://store.steampowered.com/search/
+
+page = requests.get(url)
+
+print(page.text)

@@ -13,12 +13,55 @@ from scrapy.item import Item, Field
 class SteamCrawlingSpider(CrawlSpider):
 	name = "Steamcrawler"
 	allowed_domains = ["steampowered.com"]
-	start_urls = ["http://store.steampowered.com/search/?sort_by=Released_DESC"]
 	
+	#Crawl juegos mas relevantes y las 40 etiqueas mas importantes
+	
+	start_urls = ["https://store.steampowered.com/search/?category1=998"
+		"https://store.steampowered.com/search/?category1=998&tags=492",
+		"https://store.steampowered.com/search/?category1=998&tags=19",
+		"https://store.steampowered.com/search/?category1=998&tags=21",
+		"https://store.steampowered.com/search/?category1=998&tags=597",
+		"https://store.steampowered.com/search/?category1=998&tags=122",
+		"https://store.steampowered.com/search/?category1=998&tags=599",
+		"https://store.steampowered.com/search/?category1=998&tags=9",
+		"https://store.steampowered.com/search/?category1=998&tags=4182",
+		"https://store.steampowered.com/search/?category1=998&tags=493",
+		"https://store.steampowered.com/search/?category1=998&tags=113",
+		"https://store.steampowered.com/search/?category1=998&tags=3871",
+		"https://store.steampowered.com/search/?category1=998&tags=4191",
+		"https://store.steampowered.com/search/?category1=998&tags=4166",
+		"https://store.steampowered.com/search/?category1=998&tags=1684",
+		"https://store.steampowered.com/search/?category1=998&tags=1742",
+		"https://store.steampowered.com/search/?category1=998&tags=4305",
+		"https://store.steampowered.com/search/?category1=998&tags=3859",
+		"https://store.steampowered.com/search/?category1=998&tags=1664",
+		"https://store.steampowered.com/search/?category1=998&tags=3964",
+		"https://store.steampowered.com/search/?category1=998&tags=3834",
+		"https://store.steampowered.com/search/?category1=998&tags=128",
+		"https://store.steampowered.com/search/?category1=998&tags=701",
+		"https://store.steampowered.com/search/?category1=998&tags=4726",
+		"https://store.steampowered.com/search/?category1=998&tags=4667",
+		"https://store.steampowered.com/search/?category1=998&tags=3839",
+		"https://store.steampowered.com/search/?category1=998&tags=3993",
+		"https://store.steampowered.com/search/?category1=998&tags=699",
+		"https://store.steampowered.com/search/?category1=998&tags=4085",
+		"https://store.steampowered.com/search/?category1=998&tags=4106",
+		"https://store.steampowered.com/search/?category1=998&tags=12095",
+		"https://store.steampowered.com/search/?category1=998&tags=1773",
+		"https://store.steampowered.com/search/?category1=998&tags=6650",
+		"https://store.steampowered.com/search/?category1=998&tags=4136",
+		"https://store.steampowered.com/search/?category1=998&tags=3942",
+		"https://store.steampowered.com/search/?category1=998&tags=1774",
+		"https://store.steampowered.com/search/?category1=998&tags=1654",
+		"https://store.steampowered.com/search/?category1=998&tags=4345",
+		"https://store.steampowered.com/search/?category1=998&tags=1667",
+		"https://store.steampowered.com/search/?category1=998&tags=4004",
+		"https://store.steampowered.com/search/?category1=998&tags=5350",
+		"https://store.steampowered.com/search/?category1=998&tags=1697",	
+	]
 	
 	rules = (
 		Rule(LinkExtractor(allow='/app/(.+)/', restrict_css='#search_result_container'), callback='parse_item'),
-		Rule(LinkExtractor(allow='page=(d+)',restrict_css='.search_pagination_right')),
 	)
 
 	def parse_item(self, response):
@@ -28,8 +71,6 @@ class SteamCrawlingSpider(CrawlSpider):
 		if '/agecheck' in response.url:
 			
 			redir= response.url.replace("/agecheck", "")
-			print("\n\n\n pp \n\n\n")
-			print(redir)
 			
 			response = requests.get(url=redir,
 				cookies={'mature_content': '1'})
@@ -50,12 +91,12 @@ class SteamCrawlingSpider(CrawlSpider):
 			
 			#Lista de generos
 			
-			genre = div_element.find('b', string='Genre:')
+			genre_element = div_element.find('b', string='Genre:')
 			
 			genre = [] # por defecto lista vacia
 		
-			if genre: # si hay lista de generos
-				genre_span = genre.find_next('span')
+			if genre_element: # si hay lista de generos
+				genre_span = genre_element.find_next('span')
 				genre_links = genre_span.find_all('a')
 				genre = [link.get_text(strip=True) for link in genre_links]
 				
@@ -127,15 +168,18 @@ class SteamCrawlingSpider(CrawlSpider):
 					price = float(0)
 					
 				else:
-					
-					price = float(price_element.get_text(strip=True).replace(",", ".").replace("€", ""))
+					try:
+						price = float(price_element.get_text(strip=True).replace(",", ".").replace("€", ""))
+					except:
+						print(f"error : {price_element.get_text} is not a number")
+						price = float(0)
 
 			elif discount_element:
 				
 				price = float(discount_element.get_text(strip=True).replace(",", ".").replace("€", ""))
 
 			else:
-				price = "-1"
+				price = float(0)
 				
 				
 			#Descripcion

@@ -10,6 +10,8 @@ from scrapy import signals
 from itemadapter import is_item, ItemAdapter
 
 from scrapy.downloadermiddlewares.redirect import RedirectMiddleware
+from w3lib.url import url_query_cleaner
+from scrapy.dupefilters import RFPDupeFilter
 
 """
 class CircumventAgeCheckMiddleware(RedirectMiddleware):
@@ -26,6 +28,13 @@ class CircumventAgeCheckMiddleware(RedirectMiddleware):
 			meta={'dont_cache': True},
 			callback=SteamCrawlingSpider.parse_item)
 """
+
+
+class SteamDupeFilter(RFPDupeFilter):
+	def request_fingerprint(self, request):
+		url = url_query_cleaner(request.url, ['snr'], remove=True)
+		request = request.replace(url=url)
+		return super().request_fingerprint(request)
 
 class SteamscrapSpiderMiddleware:
     # Not all methods need to be defined. If a method is not defined,
