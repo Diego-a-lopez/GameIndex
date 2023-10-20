@@ -230,19 +230,19 @@ class SteamCrawlingSpider(CrawlSpider):
 			
 			
 			#pasar toda la información al game item
-			item['Title']= Title
-			item['Descrition']= description
-			item['Price']= price
-			item['Genre'] = genre
-			item['Developers']= developers
-			item['Publishers']= publishers
-			item['Franchise']= franchise
-			item['Release_date']= release_date
-			item['Header_Image']= header_image
-			item['Image_List']= images_list
-			item['Url']= response.url
-			item['Score']= score
-			item['Reviews']= reviews
+			item['title']= Title
+			item['descrition']= description
+			item['price']= price
+			item['genre'] = genre
+			item['developers']= developers
+			item['publishers']= publishers
+			item['franchise']= franchise
+			item['release_date']= release_date
+			item['header_Image']= header_image
+			item['image_List']= images_list
+			item['url']= response.url
+			item['score']= score
+			item['reviews']= reviews
 			
 			return item
 			
@@ -252,16 +252,16 @@ class SteamCrawlingSpider(CrawlSpider):
 
 class GameItem(Item):
 	
-	Title = Field()
-	Descrition = Field()
-	Price = Field()
-	Genre = Field()
-	Developers = Field()
-	Publishers = Field()
-	Franchise = Field()
-	Release_date = Field()
-	Header_Image = Field()
-	Image_List = Field()
-	Url = Field()
-	Score = Field()
-	Reviews = Field()
+	title = Field()
+	descrition = Field()
+	price = Field()
+	genre = Field()
+	developers = Field()
+	publishers = Field()
+	franchise = Field()
+	release_date = Field()
+	header_Image = Field()
+	image_List = Field()
+	url = Field()
+	score = Field()
+	reviews = Field()
