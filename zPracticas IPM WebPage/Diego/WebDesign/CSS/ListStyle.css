@@ -1,0 +1,115 @@
+
+@import url("https://fonts.googleapis.com/css2?family=Archivo+Black&display=swap");
+
+.topnav {
+	background-color:  #E94822;
+	overflow: hidden;
+}
+
+.topnav a {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	color: #2C2D34;
+	background-color:  #E94822;
+	text-align: center;
+	padding: 14pvh 16vh;
+	text-decoration: none;
+	font-size: 7vh;
+	font-family: "Archivo Black", serif;
+	border: 2px solid;
+}
+
+html{
+}
+
+h1 {
+	color: #2C2D34;
+}
+
+body {
+	margin: 0;
+	background-color: #F2910A;
+}
+
+img {
+	width: 5vh;
+	height: 5vh;
+}
+
+button {
+	background-color: #EFD510;
+	color: #2C2D34;
+	width: 75vw;
+	height: 5vh;
+	border: 2px solid;
+}
+
+button:hover{
+	transition: 0.5s;
+	text-decoration: underline;
+	background-color: #2C2D34;
+	color: #EFD510;
+}
+
+
+table{
+	width: 100%;
+	color: #FFFFFF;
+	background-color: #E94822;
+	padding: 1vh;
+	border-spacing: 1vh;
+	border-collapse: collapse;
+
+}
+
+th, td {
+	padding: 1vh;
+	text-align: center;
+	border-bottom: 1px solid #F2910A;
+    border-top: 1px solid #F2910A;
+    border-collapse: collapse;
+}
+
+th{
+	background-color: #E94822;
+}
+
+tr:nth-child(even) {
+	background-color: #E94822;
+	    	font-size: 5vh;
+}
+
+tr:nth-child(odd) {
+	background-color: #F2910A;
+}
+
+#text{
+	font-family: "Archivo Narrow", serif;
+    font-size: 3.6vh;
+}
+
+#top_bar{
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	height: 20vh;
+	background-color: #E94822;
+	border: 2px solid;
+}
+
+#main_logo{
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+}
+
+#main_frame{
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+}
