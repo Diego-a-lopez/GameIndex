@@ -1,38 +1,41 @@
-        const searchButton = document.getElementById('searchButton');
-        const searchInput = document.getElementById('searchInput');
-        const searchType = document.getElementById('searchType');
-        const searchResults = document.getElementById('searchResults');
+// Wait for the document to be ready
+$(document).ready(function () {
+  // Define the Elasticsearch endpoint
+  const elasticsearchEndpoint = 'http://localhost:9200/games/_search';
 
-        searchButton.addEventListener('click', () => {
-            const query = searchInput.value;
-            const type = searchType.value;
+  // Get the search button and search input
+  const searchButton = $('#searchButton');
+  const searchResults = $('#searchResults');
 
-            // Make an AJAX request to your backend API
-            // Replace 'your_backend_url' with your actual backend server URL
-            //fetch(`your_backend_url/search?type=${type}&query=${query}`)
-            //fetch(`https://localhost:9200/games/search?type=${type}&query=${query}`)
-            fetch(`https://localhost:9200/games/search?_search?size=50&pretty=true&q=*:*`)
-                .then(response => response.json())
-                .then(data => {
-                    // Display search results
-                    displayResults(data);
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    searchResults.innerHTML = error;//'An error occurred while searching.';
-                });
-        });
+  // When the search button is clicked
+  searchButton.click(function () {
+    // Get the selected search type and search input
+    const searchType = $('#searchType').val();
+    const searchInput = $('#searchInput').val();
 
-        function displayResults(results) {
-            searchResults.innerHTML = ''; // Clear previous results
-            if (results.length === 0) {
-                searchResults.innerHTML = 'No results found.';
-                return;
-            }
-
-            results.forEach(result => {
-                const resultItem = document.createElement('div');
-                resultItem.innerHTML = `<strong>${result._source.Title}</strong><br>${result._source.Description}`;
-                searchResults.appendChild(resultItem);
-            });
+    // Prepare the query based on the selected search type
+    const query = {
+      query: {
+        match: {
+          [searchType]: searchInput
         }
+      }
+    };
+
+    // Send a POST request to Elasticsearch
+    $.ajax({
+      type: 'POST',
+      url: elasticsearchEndpoint,
+      data: JSON.stringify(query),
+      contentType: 'application/json',
+      success: function (data) {
+        // Redirect to output.html and pass the data as a query parameter
+        window.location.href = 'output.html?data=' + JSON.stringify(data);
+      },
+      error: function (error) {
+        // Handle errors if any
+        searchResults.text('Error: ' + JSON.stringify(error));
+      }
+    });
+  });
+});
