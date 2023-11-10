@@ -37,8 +37,10 @@ const config: SearchDriverOptions = {
       description: { snippet: { fallback: true } },
       price: { raw: {} },
       score: { raw: {} },
+      reviews: { raw: {} },
       genre: { raw: {} },
       developers: { raw: {} },
+      franchise : { raw: {} },
       header_image: {raw: {} },
       url: {raw: {}}
     },
@@ -50,14 +52,15 @@ const config: SearchDriverOptions = {
     },
     disjunctiveFacets: [""],
 facets: {
+		"genre.keyword": { type: "value" },
 		  price: {
 			type: "range",
 			ranges: [
+			  { from: 0, to: 1000000000, name: "None" },
 			  { from: 0, to: 1, name: "One euro or less" },
 			  { from: 0, to: 5, name: "Under 5 euros" },
-			  { from: 0, to: 10, name: "Under 10 euros" },
 			  { from: 0, to: 25, name: "Under 25 euros" },
-			  { from: 51, name: "Over 50 euros" },
+			  { from: 0, to: 50, name: "Under 50 euros" },
 			]
 		  },
 		  score: {
@@ -67,9 +70,10 @@ facets: {
 			  { from: 30, to: 50, name: "30-50" },
 			  { from: 50, to: 70, name: "50-70" },
 			  { from: 70, to: 90, name: "70-90" },
-			  { from: 90, to: 100, name: "90-100" }
+			  { from: 90, to: 990, name: "90-100" }
 			]
-		  }
+		  },
+		  "reviews.keyword":  { type: "value" }
 		}
   }
 };
@@ -84,11 +88,16 @@ export default function App() {
         {({ wasSearched }) => {
           return (
             <div className="App">
-              <ErrorBoundary>
+              <ErrorBoundary> 
                 <Layout
                   header={<SearchBox debounceLength={0} />}
                   sideContent={
 					  <div>
+						<Facet
+						  field="genre.keyword"
+						  label="Genre"
+						  isFilterable={true}
+						/>
 						<Facet
 						  field="price"
 						  label="Price"
@@ -98,7 +107,11 @@ export default function App() {
 						  field="score"
 						  label="Score"
 						  view={SingleLinksFacet}
-						/>   
+						/> 
+						<Facet
+						  field="reviews.keyword"
+						  label="Reviews"
+						/>  
 					  </div>
 					}
 
