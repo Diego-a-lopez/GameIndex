@@ -2,6 +2,7 @@ import AppSearchAPIConnector from "@elastic/search-ui-app-search-connector";
 import React from "react";
 import ElasticsearchAPIConnector from "@elastic/search-ui-elasticsearch-connector"
 
+
 import {
   ErrorBoundary,
   Facet,

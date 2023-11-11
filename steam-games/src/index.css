@@ -11,3 +11,78 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+body {
+  font-style: italic;
+  background-color: #EF3340; /* Red */
+}
+
+body, h1, h2, h3, p {
+  color: #00205B; 
+}
+
+input {
+  background-color: #00205B; /* Set a blue background color for the search box */
+  color: #fff; /* Set white text color for the search box */
+  padding: 5px; /* Add padding to the search box */
+  border: none; /* Remove default border */
+  border-radius: 5px; /* Add border-radius for a rounded appearance */
+}
+
+/* Set placeholder text color */
+input::placeholder {
+  font-style: italic;
+  color: #fff; /* Set white color for the placeholder text */
+}
+
+span.sui-result__key{
+  font-weight: bold;
+  color: #001236
+}
+
+div.sui-facet{
+
+  color: #EF3340;
+  background-color: #D3D3D3;
+}
+
+
+div.sui-facet__title{
+  background-color: #D3D3D3;
+}
+
+
+legend.sui-facet{
+  font-weight: bold;
+  color: #EF3340;
+  background-color: #D3D3D3;
+}
+
+
+fieldset.sui-facet{
+  color: #EF3340;
+  background-color: #D3D3D3;
+}
+
+
+li.sui-result{
+  background-color: #D3D3D3;
+}
+
+input.button.sui-search-box__submit {
+  background-color: #00205B; /* Dark Blue - Primary */
+  color: #FFFFFF; /* White - Text */
+  border: none;
+  padding: 10px 20px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+a {
+  font-weight: bold;
+  color: #EF3340;
+}
+
+div.sui-layout-main{
+  background-color: #B8C4CC;
+}
