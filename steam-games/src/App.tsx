@@ -2,7 +2,6 @@ import AppSearchAPIConnector from "@elastic/search-ui-app-search-connector";
 import React from "react";
 import ElasticsearchAPIConnector from "@elastic/search-ui-elasticsearch-connector"
 
-
 import {
   ErrorBoundary,
   Facet,
@@ -28,6 +27,16 @@ const connector = new ElasticsearchAPIConnector({
   index: "steam_games"
 });
 
+const generateYearRanges = () => {
+  const yearRanges = [];
+  for (let year = 1998; year <= 2023; year += 6) {
+    const from = `${year}-01-01T00:00:00Z`;
+    const to = `${year + 6}-12-31T23:59:59Z`;
+    yearRanges.push({ from, to, name: `${year}-${year + 6}` });
+  }
+  return yearRanges;
+};
+
 const config: SearchDriverOptions = {
   alwaysSearchOnInitialLoad: true,
   apiConnector: connector,
@@ -37,6 +46,7 @@ const config: SearchDriverOptions = {
       title: { snippet: { fallback: true } },
       description: { snippet: { fallback: true } },
       price: { raw: {} },
+      release_date: {raw: {}},
       score: { raw: {} },
       reviews: { raw: {} },
       genre: { raw: {} },
@@ -74,7 +84,8 @@ facets: {
 			  { from: 90, to: 990, name: "90-100" }
 			]
 		  },
-		  "reviews.keyword":  { type: "value" }
+		  "reviews.keyword":  { type: "value" },
+		  release_date: {type: "range", ranges: generateYearRanges(),}
 		}
   }
 };
@@ -112,7 +123,12 @@ export default function App() {
 						<Facet
 						  field="reviews.keyword"
 						  label="Reviews"
-						/>  
+						/>
+						<Facet
+                          field="release_date"
+                          label="Date"
+                          view={SingleLinksFacet}
+                        />  
 					  </div>
 					}
 
