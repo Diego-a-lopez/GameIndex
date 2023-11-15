@@ -1,17 +1,44 @@
+import elastic_transport
 from elasticsearch import Elasticsearch, helpers
 import json
+from elasticsearch_dsl import Search
+from sklearn.cluster import KMeans
+from sklearn.feature_extraction.text import TfidfVectorizer
+from summarizer import Summarizer
+from elasticsearch import Elasticsearch
 
 # COMANDO DE DOCKER: docker run --rm -p 9200:9200 -p 9300:9300 -e "xpack.security.enabled=false" -e "discovery.type=single-node" docker.elastic.co/elasticsearch/elasticsearch:8.10.0
 
 client = Elasticsearch("http://localhost:9200/")
 INDEX = 'steam_games'
-JSON_FILE = 'SteamScrap/GAMES2.json'
+JSON_FILE = 'SteamScrap/GAMES4.json'
+
+# resp = client.indices.delete(
+#     index=INDEX,
+# )
+# print(resp)
+
+mappings = {
+    "properties": {
+        "title": {"type": "text", "analyzer": "english"},
+        "description": {"type": "text", "analyzer": "english"},
+        "price": {"type": "float"},
+        "genre": {"type": "keyword"},
+        "developers": {"type": "keyword"},
+        "publishers": {"type": "keyword"},
+        "franchise": {"type": "keyword"},
+        "release_date": {"type": "date", "format": "strict_date_optional_time"},
+        "header_image": {"type": "keyword"},
+        "image_list": {"type": "keyword"},
+        "url": {"type": "keyword"},
+        "score": {"type": "keyword"},
+        "reviews": {"type": "text", "analyzer": "english"}
+    }
+}
 
 
-def create_index():
+def create_index(mappings=mappings):
     client.indices.create(index=INDEX, body={"mappings": mappings})
-    # res = index.create()
-    # print(res)
 
 
 def read_all_games():
@@ -25,7 +52,7 @@ test_search_query = {
         "bool": {
             "must": {
                 "match_phrase": {
-                    "developers": "Entwell Co., Ltd."
+                    'title': 'Mortal Kombat 1'
                 }
             },
             "filter": {
@@ -41,22 +68,10 @@ test_search_query = {
     }
 }
 
-# Modify the mappings to use lowercase property names
-mappings = {
-    "properties": {
-        "title": {"type": "text", "analyzer": "english"},
-        "description": {"type": "text", "analyzer": "english"},
-        "price": {"type": "float"},
-        "genre": {"type": "keyword", "multi": True},
-        "developers": {"type": "text", "analyzer": "standard", "multi": True},
-        "publishers": {"type": "text", "analyzer": "standard", "multi": True},
-        "franchise": {"type": "text", "analyzer": "standard", "multi": True},
-        "release_date": {"type": "date", "format": "dd MMM, yyyy"},
-        "header_image": {"type": "keyword"},
-        "image_list": {"type": "keyword", "multi": True},
-        "url": {"type": "keyword"},
-        "score": {"type": "integer"},
-        "reviews": {"type": "text", "analyzer": "english"}
+search_query = {
+    "size": 10000,  # Max number of results
+    "query": {
+        "match_all": {}
     }
 }
 
@@ -96,14 +111,53 @@ def gen_data(game_data):
     return data
 
 
-all_games_data = read_all_games()
-helpers.bulk(client, gen_data(all_games_data))
-# client.indices.refresh(index=INDEX)
-# client.cat.count(index=INDEX, format="json")
+document_count = 0
+try:
+    document_count = client.count(index=INDEX)['count']
+except Exception as e:
+    print(f"The index '{INDEX}' is does not exist.")
+    create_index()
+    all_games_data = read_all_games()
+    helpers.bulk(client, gen_data(all_games_data))
+    client.indices.refresh(index=INDEX)
+    document_count = client.count(index=INDEX)['count']
 
-resp = client.search(index="steam_games", body=test_search_query)
+if document_count > 0:
+    print(f"The index '{INDEX}' has {document_count} documents.")
 
-# Get the response body
-result = resp['hits']['hits']
-for hit in result:
-    print(hit["_source"])
+
+def cluster_search_results(search_results, num_clusters=3, field="description"):
+    # Extract text data for clustering
+    documents = [result['_source'][field] for result in search_results]
+
+    # Convert text data to TF-IDF vectors
+    vectorizer = TfidfVectorizer()
+    tfidf_matrix = vectorizer.fit_transform(documents)
+
+    # Perform K-Means clustering
+    kmeans = KMeans(n_clusters=num_clusters)
+    kmeans.fit(tfidf_matrix)
+    clusters = kmeans.labels_
+
+    # Assign clusters to search results
+    for i, result in enumerate(search_results):
+        result['_source']['cluster'] = clusters[i]
+
+    return search_results, clusters
+
+
+
+
+# Usage example
+search_results = client.search(index=INDEX, body=search_query)
+# test_Search = client.search(index=INDEX, body={"query": {"match_phrase": {"genre": "Action"}}})
+search_results = search_results['hits']['hits']
+print("Search results:\n")
+print(search_results)
+
+# Example of clustering
+search_results, clusters = cluster_search_results(search_results)
+for i, result in enumerate(search_results):
+    print(f"Game name: {result['_source']['title']}, Cluster: {clusters[i]}")
+
+
