@@ -27,6 +27,17 @@ const connector = new ElasticsearchAPIConnector({
   index: "steam_games"
 });
 
+// Helper function to format release_date
+function formatDate(dateString: string): string {
+  const options: Intl.DateTimeFormatOptions = {
+    day: 'numeric',
+    month: 'short',
+    year: 'numeric',
+  };
+  const date = new Date(dateString);
+  return date.toLocaleDateString('en-US', options);
+}
+
 const generateYearRanges = () => {
   const yearRanges = [];
   for (let year = 1998; year <= 2023; year += 6) {
@@ -94,50 +105,105 @@ export default function App() {
     <SearchProvider config={config}>
       <WithSearch
         mapContextToProps={({ wasSearched }) => ({
-          wasSearched
+          wasSearched,
         })}
       >
         {({ wasSearched }) => {
           return (
             <div className="App">
-              <ErrorBoundary> 
+              <ErrorBoundary>
                 <Layout
                   header={<SearchBox debounceLength={0} />}
                   sideContent={
-					  <div>
-						<Facet
-						  field="genre.keyword"
-						  label="Genre"
-						  isFilterable={true}
-						/>
-						<Facet
-						  field="price"
-						  label="Price"
-						  view={SingleSelectFacet}
-						/>
-						<Facet
-						  field="score"
-						  label="Score"
-						  view={SingleLinksFacet}
-						/> 
-						<Facet
-						  field="reviews.keyword"
-						  label="Reviews"
-						/>
-						<Facet
-                          field="release_date"
-                          label="Date"
-                          view={SingleLinksFacet}
-                        />  
-					  </div>
-					}
-
+                    <div>
+                      <Facet
+                        field="genre.keyword"
+                        label="Genre"
+                        isFilterable={true}
+                      />
+                      <Facet
+                        field="price"
+                        label="Price"
+                        view={SingleSelectFacet}
+                      />
+                      <Facet
+                        field="score"
+                        label="Score"
+                        view={SingleLinksFacet}
+                      />
+                      <Facet
+                        field="reviews.keyword"
+                        label="Reviews"
+                      />
+                      <Facet
+                        field="release_date"
+                        label="Date"
+                        view={SingleLinksFacet}
+                      />
+                    </div>
+                  }
                   bodyContent={
                     <Results
-                      titleField="title"
-                      urlField="url"
-                      thumbnailField="header_image"
+                      titleField="title.raw"
+                      urlField="url.raw"
+                      thumbnailField="header_image.raw"
                       shouldTrackClickThrough={true}
+                      resultView={(props) => (
+                        <div className="result-item">
+                          <a
+                            href={props.result.url.raw}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            style={{ fontSize: '20px', fontWeight: 'bold' }}
+                          >
+                            {props.result.title.raw}
+                          </a>
+                          <div>
+                            <img
+                              src={props.result.header_image.raw}
+                              alt={props.result.title.raw}
+                            />
+                            <div>
+                              <div>
+                                <strong>Description:</strong>{' '}
+                                {props.result.description.raw}
+                              </div>
+                              <div>
+                                <strong>Price:</strong>{' '}
+                                {props.result.price.raw !== '0.0' && props.result.price.raw !== undefined ? `${props.result.price.raw} €` : 'Free to play'}
+                              </div>
+                              <div>
+                                <strong>Genre:</strong>{' '}
+                                {Array.isArray(props.result.genre.raw)
+                                  ? props.result.genre.raw.join(', ')
+                                  : 'none'}
+                              </div>
+                              <div>
+                                <strong>Developers:</strong>{' '}
+                                {Array.isArray(props.result.developers.raw)
+                                  ? props.result.developers.raw.join(', ')
+                                  : 'none'}
+                              </div>
+                              <div>
+                                <strong>Franchise:</strong>{' '}
+                                {props.result.franchise.raw || 'none'}
+                              </div>
+                              <div>
+                                <strong>Release Date:</strong>{' '}
+                                {formatDate(props.result.release_date.raw)}
+                              </div>
+                              <div>
+                                <strong>Score:</strong>{' '}
+                                {props.result.score.raw || 'none'}
+                              </div>
+                              <div>
+                                <strong>Reviews:</strong>{' '}
+                                {props.result.reviews.raw || 'none'}
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      )}
                     />
                   }
                   bodyHeader={

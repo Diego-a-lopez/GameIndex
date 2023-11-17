@@ -66,71 +66,74 @@ div.sui-layout-body__inner{
 
 input {
   background-color: #00205B; /* Set a blue background color for the search box */
-  color: #fff; /* Set white text color for the search box */
-  padding: 5px; /* Add padding to the search box */
-  border: none; /* Remove default border */
-  border-radius: 5px; /* Add border-radius for a rounded appearance */
+  color: #fff;
+  padding: 5px;
+  border: none; 
+  border-radius: 5px;
 }
 
-/* Set placeholder text color */
+/* Set placeholder text color  for searchbar*/
 input::placeholder {
   font-style: italic;
-  color: #fff; /* Set white color for the placeholder text */
+  color: #fff; 
 }
 
+/* Style of the search bar button*/
 input.button.sui-search-box__submit {
-  background-color: #00205B; /* Dark Blue - Primary */
-  color: #FFFFFF; /* White - Text */
+  background-color: #00205B;
+  color: #FFFFFF;
   border: none;
   padding: 10px 20px;
   cursor: pointer;
   transition: background-color 0.3s ease;
 }
 
+/*Style of the checkbox search elements*/
 fieldset.sui-facet{
   background-color: #D3D3D3;
   padding: 20px 20px;
   border: 2px dotted #00205B;
 }
 
+/*Style title of the selector elemets with checkbox*/
 legend.sui-facet__title{
   background-color: #D3D3D3;
   font-weight: bold;
-  color: #00205B; /* Dark Blue - Primary */
+  color: #00205B;
 }
 
+/*Style of non checkbox search elements*/
 div.sui-facet{
   background-color: #D3D3D3;
   padding: 20px 20px;
   border: 2px dotted #00205B;
 }
 
+/*Style title of the non checkbox elements*/
 div.sui-facet__title{
   background-color: #D3D3D3;
   font-weight: bold;
-  color: #00205B; /* Dark Blue - Primary */
-
+  color: #00205B;
 }
 
 
 
 
-
+/*Style comboboxes color*/
 div.sui-select__control{
-  background-color: #00205B; /* Set a blue background color for the search box */
-  color: #fff; /* Set white text color for the search box */
+  background-color: #00205B;
+  color: #fff;
 }
 
+/*Style of combobox text*/
 div.sui-select__single-value {
-  font-style: italic;
-  color: #fff; /**/
-}
-
-div.sui-select__value-container {
   font-style: italic;
   color: #fff; 
 }
 
+
+
+/*Style of combobox placeholder text*/
 div#react-select-3-placeholder.sui-select__placeholder {
   font-style: italic;
   color: #fff; 
@@ -141,16 +144,55 @@ div#react-select-3-placeholder.sui-select__placeholder {
 
 /* START : Index reults styling*/
 
-span.sui-result__key{
-  font-weight: bold;
-  color: #001236
-}
 
-
-li.sui-result{
+/* New class for result items */
+.result-item {
+  margin-bottom: 20px;
+  border: 1.5px solid #F5F5F5;
+  padding: 20px;
   background-color: #D3D3D3;
 }
 
+
+/*Style result items */
+
+
+/*Style links as normal text*/
+.result-item a {
+  font-size: 20px;
+  font-weight: bold;
+  color: #00205B;
+  text-decoration: none;
+  display: block;
+  margin-bottom: 10px;
+}
+
+ /* Add underline to link on hover */
+.result-item a:hover {
+  text-decoration: underline;
+}
+
+
+/*set field right by the field descriptors*/
+.result-item div > div {
+  display: block;
+}
+
+/*Style image */
+
+.result-item img {
+  margin-right: 20px;
+  width: 460px;
+  height: 215px;
+  object-fit: cover;
+}
+
+/*Style result items */
+.result-item div {
+  margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+}
 
 
 
