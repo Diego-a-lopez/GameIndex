@@ -54,16 +54,20 @@
 
 1. Navigate to the `steam-games` subdirectory and set up the project:
 
-npm install
-
+     ```
+     npm install
+     ```
+     
 2. Install project dependencies:
 
-npm add @elastic/search-ui @elastic/react-search-ui-views @elastic/search-ui-app-search-connector @elastic/react-search-ui @elastic/search-ui-elasticsearch-connector
-
+     ```
+     npm add @elastic/search-ui @elastic/react-search-ui-views @elastic/search-ui-app-search-connector @elastic/react-search-ui @elastic/search-ui-elasticsearch-connector
+     ```
 
 3. Finally, run the project:
 
-npm start
+     ```
+     npm start
 
-
+     ```
 The application will open in your default browser. Please be patient, as the initial bootup may take 2-3 minutes. If the browser does not open automatically, access the app at [http://localhost:3000](http://localhost:3000) and Elasticsearch at [http://localhost:9200](http://localhost:9200).
