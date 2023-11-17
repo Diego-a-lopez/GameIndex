@@ -5,7 +5,7 @@ import json
 
 client = Elasticsearch("http://localhost:9200/")
 INDEX = 'steam_games'
-JSON_FILE = 'SteamScrap/GAMES3.json'
+JSON_FILE = 'SteamScrap/GAMES.json'
 
 
 def create_index():

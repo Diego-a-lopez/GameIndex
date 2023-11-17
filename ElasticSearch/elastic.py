@@ -5,7 +5,7 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 
 
 class SteamGameIndexer:
-    def __init__(self, index_name='steam_games', json_file='SteamScrap/GAMES4.json',
+    def __init__(self, index_name='steam_games', json_file='SteamScrap/GAMES.json',
                  elasticsearch_url='http://localhost:9200/'):
         self.index = index_name
         self.json_file = json_file
